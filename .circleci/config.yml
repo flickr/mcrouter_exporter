@@ -1,9 +1,10 @@
-# Golang CircleCI 2.0 configuration file
-#
-# Check https://circleci.com/docs/2.0/language-go/ for more details
-version: 2
+version: 2.1
+
+orbs:
+  docker: circleci/docker@0.5.2
+
 jobs:
-  build:
+  test:
     docker:
       - image: circleci/golang:1.12
     working_directory: /go/src/github.com/Dev25/mcrouter_exporter
@@ -11,3 +12,20 @@ jobs:
       - checkout
       - run: go get github.com/smartystreets/goconvey
       - run: go test -v ./...
+
+  build:
+    executor: default
+    steps:
+      - docker/publish:
+          image: quay.io/dev25/mcrouter_exporter
+          tag: :$CIRCLE_BRANCH-$CIRCLE_SHA1
+          registry: quay.io
+
+
+workflows:
+  test_and_build:
+    jobs:
+      - test
+      - build:
+          requires:
+            - test
