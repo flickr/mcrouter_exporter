@@ -19,7 +19,7 @@ workflows:
       - test
       - docker/publish:
           image: quay.io/dev25/mcrouter_exporter
-          tag: :$CIRCLE_BRANCH-$CIRCLE_SHA1
+          tag: $CIRCLE_BRANCH-$CIRCLE_SHA1
           registry: quay.io
           requires:
             - test
