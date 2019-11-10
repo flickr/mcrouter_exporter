@@ -11,6 +11,7 @@ jobs:
     steps:
       - checkout
       - run: go get github.com/smartystreets/goconvey
+      - run: go get -v ./...
       - run: go test -v ./...
 
 workflows:
@@ -23,3 +24,6 @@ workflows:
           registry: quay.io
           requires:
             - test
+          # filters:
+          #   branches:
+          #     only: master
