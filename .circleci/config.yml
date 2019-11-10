@@ -1,7 +1,7 @@
 version: 2.1
 
 orbs:
-  docker: circleci/docker@0.5.2
+  docker: circleci/docker@0.5.17
 
 jobs:
   test:
@@ -13,19 +13,13 @@ jobs:
       - run: go get github.com/smartystreets/goconvey
       - run: go test -v ./...
 
-  build:
-    executor: default
-    steps:
-      - docker/publish:
-          image: quay.io/dev25/mcrouter_exporter
-          tag: :$CIRCLE_BRANCH-$CIRCLE_SHA1
-          registry: quay.io
-
-
 workflows:
   test_and_build:
     jobs:
       - test
-      - build:
+      - docker/publish:
+          image: quay.io/dev25/mcrouter_exporter
+          tag: :$CIRCLE_BRANCH-$CIRCLE_SHA1
+          registry: quay.io
           requires:
             - test
