@@ -19,7 +19,6 @@ workflows:
     jobs:
       - test
       - docker/publish:
-          executor: docker
           image: dev25/mcrouter_exporter
           tag: $CIRCLE_BRANCH-$CIRCLE_SHA1
           registry: quay.io
