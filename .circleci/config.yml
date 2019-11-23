@@ -24,12 +24,17 @@ workflows:
           registry: quay.io
           requires:
             - test
-          # filters:
-          #   branches:
-          #     only: master
+          filters:
+            branches:
+              only: master
   build_tags:
     jobs:
-      - test
+      - test:
+          filters:
+            tags:
+              only: /.*/
+            branches:
+              ignore: /.*/
       - docker/publish:
           image: dev25/mcrouter_exporter
           tag: $CIRCLE_TAG
