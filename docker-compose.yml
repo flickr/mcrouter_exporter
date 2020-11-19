@@ -2,19 +2,20 @@ version: '3'
 services:
 
   exporter:
-    image: quay.io/dev25/mcrouter_exporter
+    image: 056621773704.dkr.ecr.us-east-1.amazonaws.com/mcrouter_exporter:latest
     depends_on:
       - mcrouter
     ports:
       - 9442:9442
-    command: mcrouter_exporter --mcrouter.address="mcrouter:5000"
+    command: -mcrouter.address "mcrouter:5000" -mcrouter.server_metrics
+#    entrypoint: /mcrouter_exporter -mcrouter.address mcrouter:5000 -mcrouter.server_metrics
 
   mcrouter:
     image: quay.io/dev25/mcrouter:v37
     depends_on:
       - cache
     ports:
-      - "5000"
+      - 5000:5000
     command: >
       mcrouter --config-str='{"pools":{"A":{"servers":["cache:11211"]}},"route":"PoolRoute|A"}' -p 5000
 
@@ -23,3 +24,16 @@ services:
     ports:
       - "11211"
 
+  circonus-agent:
+    image: circonuslabs/circonus-agent:latest
+    hostname: mcrouter-circonus-agent
+    command: -d --debug-dump-metrics /debug_dump
+    restart: always
+    ports:
+      - 8125:8125/udp
+      - 2609:2609/tcp
+    env_file:
+      - circonus.env
+    volumes:
+      - ./prometheus_collector.yaml:/etc/prometheus_collector.yaml
+      - ./debug_dump:/debug_dump       

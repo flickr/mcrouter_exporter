@@ -770,5 +770,6 @@ func main() {
              </html>`))
 	})
 	log.Infoln("Starting HTTP server on", *listenAddress)
+	log.Infoln("Listenting to McRouter server on", *address)
 	log.Fatal(http.ListenAndServe(*listenAddress, nil))
 }

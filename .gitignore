@@ -25,3 +25,5 @@ _testmain.go
 
 mcrouter_exporter
 bin/
+debug_dump/
+circonus.env

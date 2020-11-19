@@ -1,0 +1,3 @@
+urls:
+  - id: local
+    url: http://exporter:9442/metrics
